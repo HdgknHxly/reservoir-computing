@@ -74,7 +74,7 @@ classdef ESN < handle
         end
 
         % Prediction after batch learning (free run)
-        function YRun = run(obj, UTest)
+        function [XRun, YRun] = run(obj, UTest)
             YRun = zeros(size(UTest,1), obj.Ny);
             XRun = zeros(size(UTest,1), obj.Nx*obj.Nl);
             u = UTest(1,:)';
