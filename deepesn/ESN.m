@@ -100,33 +100,5 @@ classdef ESN < handle
                 YRun(i,:) = yRun';
             end
         end
-
-        % Batch learning
-        function train2(obj, U)
-            X = zeros(obj.Nx, length(U));
-            for i = 1:size(U,1)
-                u = U(i,:)';
-                x0 = obj.Input(u);
-                X(:,i) = obj.Reservoir(x0);
-            end
-
-            % 主成分分析（PCA）による次元削減
-            [coeff, score] = pca(X');
-            reducedStates = score(:, 1:3); % 上位3次元を使用
-            
-            % 正常データを用いたクラスタリング（例: k-means）
-            numClusters = 2;
-            [idx, centroids] = kmeans(reducedStates, numClusters);
-            
-            % 各データ点の異常スコア（例: クラスタ中心からの距離）
-            anomalyScores = sum((reducedStates - centroids(idx, :)).^2, 2);
-            
-            % 異常スコアの閾値設定
-            threshold = quantile(anomalyScores, 0.95);
-            
-            % 異常検知
-            anomalies = double(anomalyScores > threshold);
-            plot(anomalies);
-        end
     end
 end
